@@ -1,25 +1,23 @@
-var http = require('http');
-var finalhandler = require('finalhandler');
-var serveIndex = require('serve-index');
-var serveStatic = require('serve-static');
-var serveFavicon = require('serve-favicon');
-var morgan = require('morgan');
+const http = require('http');
+const finalhandler = require('finalhandler');
+const serveIndex = require('serve-index');
+const serveStatic = require('serve-static');
+const serveFavicon = require('serve-favicon');
+const morgan = require('morgan');
 
 
-var logger = morgan('combined');
-// var logger = morgan('combined');
-
-const port = process.argv[3] || 80;
+const port = process.argv[3] || 8000;
 const publicDir = process.argv[2] || '/data';
-console.log(publicDir);
 
 
-var index = serveIndex(publicDir, { 'icons': true, 'view': 'details' })
-var serve = serveStatic(publicDir)
-var favicon = serveFavicon('favicon.ico', { 'maxAge': 1 })
+const favicon = serveFavicon('favicon.ico')
+const logger = morgan('combined');
+const index = serveIndex(publicDir, { 'icons': true, 'view': 'details' })
+const serve = serveStatic(publicDir)
+
 
 http.createServer((req, res) => {
-    var done = finalhandler(req, res)
+    let done = finalhandler(req, res)
     favicon(req, res, function onNext(err) {
         if (err) return done(err)
         logger(req, res, function(err) {
@@ -29,5 +27,6 @@ http.createServer((req, res) => {
                 index(req, res, done);
             });
         });
-    }); // }
+    });
 }).listen(port);
+console.log(`sfs running on port: ${port}...`);
