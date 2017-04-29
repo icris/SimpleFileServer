@@ -1,0 +1,22 @@
+{
+  "name": "dir",
+  "version": "1.0.0",
+  "description": "dir",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "dir"
+  ],
+  "author": "icris",
+  "license": "MIT",
+  "dependencies": {
+    "finalhandler": "^1.0.2",
+    "morgan": "^1.8.1",
+    "serve-favicon": "^2.4.2",
+    "serve-index": "^1.8.0",
+    "serve-static": "^1.12.2"
+  }
+}
