@@ -1,32 +1,18 @@
-const http = require('http');
-const finalhandler = require('finalhandler');
-const serveIndex = require('serve-index');
-const serveStatic = require('serve-static');
-const serveFavicon = require('serve-favicon');
-const morgan = require('morgan');
+const express = require('express'),
+    path = require('path'),
+    http = require('http'),
+    static = express.static,
+    index = require('serve-index'),
+    favicon = require('serve-favicon'),
+    logger = require('morgan'),
+    app = express(),
+    port = process.argv[3] || 8000,
+    publicDir = process.argv[2] || '/data';
 
 
-const port = process.argv[3] || 8000;
-const publicDir = process.argv[2] || '/data';
+app.use(favicon(path.join(__dirname, 'favicon.ico')));
+app.use(logger('combined'));
+app.use(static(publicDir));
+app.use(index(publicDir, { 'icons': true, 'view': 'details' }));
 
-
-const favicon = serveFavicon('favicon.ico');
-const logger = morgan('combined');
-const index = serveIndex(publicDir, { 'icons': true, 'view': 'details' });
-const serve = serveStatic(publicDir);
-
-
-http.createServer((req, res) => {
-    let done = finalhandler(req, res);
-    favicon(req, res, err => {
-        if (err) return done(err);
-        logger(req, res, err => {
-            if (err) return done(err);
-            serve(req, res, err => {
-                if (err) return done(err);
-                index(req, res, done);
-            });
-        });
-    });
-}).listen(port);
-console.log(`sfs running on port: ${port}...`);
+app.listen(port, o=> console.log(`sfs running on port: ${port}...`));
